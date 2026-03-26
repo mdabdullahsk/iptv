@@ -1,133 +1,94 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Live TV | Secure Player</title>
+    <title>Premium Live TV - Abdullah017</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #38bdf8; --bg: #0f172a; --card-bg: #1e293b; }
-        body { margin: 0; background: var(--bg); color: white; font-family: 'Poppins', sans-serif; text-align: center; user-select: none; overflow-x: hidden; }
+        :root { --primary: #38bdf8; --bg: #0f172a; --card: #1e293b; }
+        body { margin: 0; background: var(--bg); color: white; font-family: 'Poppins', sans-serif; user-select: none; }
         
+        .header { background: rgba(30, 41, 59, 0.8); backdrop-filter: blur(10px); padding: 15px; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #334155; }
+        .search-box { width: 90%; max-width: 400px; padding: 10px; border-radius: 20px; border: none; outline: none; background: #334155; color: #fff; margin-top: 10px; }
+
         .container { width: 95%; max-width: 1000px; margin: 20px auto; }
         
-        /* Header */
-        h2 { color: var(--primary); font-size: 22px; margin-bottom: 5px; }
-        #ch-name { color: #fff; text-shadow: 0 0 10px rgba(56, 189, 248, 0.5); }
+        /* Player Section */
+        .player-area { position: relative; width: 100%; padding-bottom: 56.25%; background: #000; border-radius: 15px; overflow: hidden; border: 2px solid #334155; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .player-area iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
 
-        /* Mixed Content Fix Instruction */
-        #fix-box { 
-            background: rgba(245, 158, 11, 0.1); border: 1px solid #f59e0b; 
-            padding: 12px; border-radius: 10px; margin-bottom: 15px; font-size: 13px; color: #fbbf24;
-            display: none; animation: fadeIn 0.5s;
-        }
-        .btn-fix { background: #f59e0b; color: #000; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 5px; }
-
-        /* Player Wrapper */
-        .player-wrapper { 
-            position: relative; width: 100%; padding-bottom: 56.25%; 
-            background: #000; border-radius: 15px; overflow: hidden; 
-            border: 2px solid #334155; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-        }
-        .player-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-
-        /* Grid System */
+        /* Grid */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; margin-top: 30px; }
-        .card { 
-            background: var(--card-bg); padding: 10px; border-radius: 12px; cursor: pointer; 
-            transition: 0.3s; border: 2px solid transparent; position: relative;
-        }
-        .card:hover, .active-card { border-color: var(--primary); transform: translateY(-5px); background: #2d3748; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .card { background: var(--card); padding: 10px; border-radius: 12px; cursor: pointer; transition: 0.3s; border: 2px solid transparent; text-align: center; }
+        .card:hover, .active-card { border-color: var(--primary); transform: translateY(-5px); background: #2d3748; }
         .card img { width: 100%; height: 75px; object-fit: contain; background: #fff; border-radius: 8px; margin-bottom: 8px; }
-        .card p { margin: 0; font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card p { margin: 0; font-size: 13px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
-        /* Loading Spinner */
-        #loader { margin: 20px auto; border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        @media (max-width: 600px) { .grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; } h2 { font-size: 18px; } }
+        #fix-msg { font-size: 12px; color: #facc15; margin-top: 10px; cursor: pointer; text-decoration: underline; }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
+    <div class="header">
+        <h2 style="margin:0; color:var(--primary);">Premium TV</h2>
+        <input type="text" id="search" class="search-box" placeholder="Search Channel...">
+    </div>
+
     <div class="container">
-        <h2>Live: <span id="ch-name">Loading...</span></h2>
+        <div class="player-area">
+            <iframe id="main-player" src="" allowfullscreen></iframe>
+        </div>
+        <p id="fix-msg" onclick="alert('নির্দেশনা:\n১. লকের (Lock) আইকনে ক্লিক করে Site Settings-এ যান।\n২. Insecure Content -> Allow করুন।\n৩. পেজটি রিফ্রেশ দিন।')">⚠️ ভিডিও না চললে এখানে ক্লিক করুন</p>
         
-        <!-- Fix Message for GitHub Pages (HTTPS issue) -->
-        <div id="fix-box">
-            ⚠️ ভিডিও লোড না হলে নিচের বাটনে ক্লিক করে শিখুন কীভাবে ঠিক করবেন।
-            <br>
-            <button class="btn-fix" onclick="alert('নির্দেশনা:\n১. ব্রাউজারের উপরে সাইট নামের পাশে তালা (Lock) আইকনে ক্লিক করুন।\n২. Site Settings-এ যান।\n৩. Insecure Content খুঁজে বের করে Allow করে দিন।\n৪. পেজটি রিফ্রেশ দিন।')">How to Fix?</button>
-        </div>
-
-        <div id="loader"></div>
-
-        <div class="player-wrapper">
-            <iframe id="main-player" src="about:blank" allowfullscreen></iframe>
-        </div>
-
-        <div class="grid" id="list"></div>
+        <div class="grid" id="channel-list"></div>
     </div>
 
     <script>
-        // ১. কিবোর্ড সিকিউরিটি (F12, Ctrl+U বন্ধ)
-        document.onkeydown = function(e) {
-            if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)) return false;
-        };
+        const API_URL = "https://raw.githubusercontent.com/mdabdullahsk/channels-list/main/channels.json";
+        const PLAYER_BRIDGE = "https://Abdullah017.pythonanywhere.com/play?id=";
 
-        // ২. এনক্রিপ্টেড সোর্স লিঙ্ক (Base64)
-        const _0x1a2b = "aHR0cDovLzEwMy4xNDQuODkuMjUxL3BsYXllci5waHA/c3RyZWFtPQ==";
-        const _0x3c4d = "https://raw.githubusercontent.com/mdabdullahsk/channels-list/main/channels.json";
-
-        // ৩. HTTPS চেক করে ফিক্স মেসেজ দেখানো
-        if (window.location.protocol === "https:") {
-            document.getElementById('fix-box').style.display = 'block';
-        }
-
-        async function initApp() {
-            const listDiv = document.getElementById('list');
-            const nameEl = document.getElementById('ch-name');
-            const player = document.getElementById('main-player');
-            const loader = document.getElementById('loader');
+        async function loadTV() {
+            const listDiv = document.getElementById('channel-list');
+            const searchInput = document.getElementById('search');
+            let channels = [];
 
             try {
-                const response = await fetch(_0x3c4d);
-                const data = await response.json();
-                loader.style.display = 'none';
+                const res = await fetch(API_URL);
+                channels = await res.json();
 
-                data.forEach((item, i) => {
-                    const card = document.createElement('div');
-                    card.className = 'card';
-                    
-                    // লোগো প্রক্সি (লোগো যেন সব জায়গায় লোড হয়)
-                    const imgUrl = `https://images.weserv.nl/?url=${encodeURIComponent(item.img)}&w=200`;
-                    
-                    card.innerHTML = `<img src="${imgUrl}" onerror="this.src='https://via.placeholder.com/150?text=TV'"><p>${item.name}</p>`;
-                    
-                    card.onclick = () => {
-                        document.querySelectorAll('.card').forEach(c => c.classList.remove('active-card'));
-                        card.classList.add('active-card');
-                        nameEl.innerText = item.name;
-                        
-                        // ডিকোড করে লিঙ্ক সেট করা
-                        player.src = atob(_0x1a2b) + item.id;
-                        
-                        // মোবাইল ইউজারদের জন্য স্ক্রল টু প্লেয়ার
-                        if(window.innerWidth < 800) window.scrollTo({top: 0, behavior: 'smooth'});
-                    };
+                const display = (data) => {
+                    listDiv.innerHTML = "";
+                    data.forEach((ch, i) => {
+                        const card = document.createElement('div');
+                        card.className = "card";
+                        card.innerHTML = `<img src="https://images.weserv.nl/?url=${encodeURIComponent(ch.img)}&w=200"><p>${ch.name}</p>`;
+                        card.onclick = () => {
+                            document.querySelectorAll('.card').forEach(c => c.classList.remove('active-card'));
+                            card.classList.add('active-card');
+                            document.getElementById('main-player').src = PLAYER_BRIDGE + ch.id;
+                            window.scrollTo({top: 0, behavior: 'smooth'});
+                        };
+                        listDiv.appendChild(card);
+                        if(i === 0 && searchInput.value === "") card.click();
+                    });
+                };
 
-                    listDiv.appendChild(card);
-                    if (i === 0) card.click(); // প্রথম চ্যানেল প্লে
-                });
-            } catch (err) {
-                nameEl.innerText = "Error Loading Data!";
-                loader.style.display = 'none';
-            }
+                display(channels);
+
+                // সার্চ ফাংশন
+                searchInput.oninput = () => {
+                    const filtered = channels.filter(c => c.name.toLowerCase().includes(searchInput.value.toLowerCase()));
+                    display(filtered);
+                };
+
+            } catch (e) { console.log("Error loading channels"); }
         }
 
-        initApp();
+        loadTV();
+        
+        // কিবোর্ড সিকিউরিটি
+        document.onkeydown = (e) => { if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73)) return false; };
     </script>
 </body>
 </html>
