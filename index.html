@@ -3,113 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Live TV - Direct Secure Player</title>
+    <title>Premium Live TV | Secure Player</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        body { margin: 0; background: #0b0f19; color: white; font-family: 'Poppins', sans-serif; text-align: center; user-select: none; }
-        .container { width: 95%; max-width: 900px; margin: 20px auto; }
+        :root { --primary: #38bdf8; --bg: #0f172a; --card-bg: #1e293b; }
+        body { margin: 0; background: var(--bg); color: white; font-family: 'Poppins', sans-serif; text-align: center; user-select: none; overflow-x: hidden; }
         
-        /* Player Design */
+        .container { width: 95%; max-width: 1000px; margin: 20px auto; }
+        
+        /* Header */
+        h2 { color: var(--primary); font-size: 22px; margin-bottom: 5px; }
+        #ch-name { color: #fff; text-shadow: 0 0 10px rgba(56, 189, 248, 0.5); }
+
+        /* Mixed Content Fix Instruction */
+        #fix-box { 
+            background: rgba(245, 158, 11, 0.1); border: 1px solid #f59e0b; 
+            padding: 12px; border-radius: 10px; margin-bottom: 15px; font-size: 13px; color: #fbbf24;
+            display: none; animation: fadeIn 0.5s;
+        }
+        .btn-fix { background: #f59e0b; color: #000; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 5px; }
+
+        /* Player Wrapper */
         .player-wrapper { 
             position: relative; width: 100%; padding-bottom: 56.25%; 
             background: #000; border-radius: 15px; overflow: hidden; 
-            border: 2px solid #2d3748; box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            border: 2px solid #334155; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
         .player-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
 
-        /* Grid Design */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; margin-top: 25px; }
+        /* Grid System */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; margin-top: 30px; }
         .card { 
-            background: #1a202c; padding: 12px; border-radius: 12px; cursor: pointer; 
-            transition: 0.3s; border: 2px solid transparent;
+            background: var(--card-bg); padding: 10px; border-radius: 12px; cursor: pointer; 
+            transition: 0.3s; border: 2px solid transparent; position: relative;
         }
-        .card:hover, .active-card { border-color: #38bdf8; transform: translateY(-5px); background: #2d3748; }
-        .card img { width: 100%; height: 80px; object-fit: contain; background: #fff; border-radius: 8px; margin-bottom: 8px; }
+        .card:hover, .active-card { border-color: var(--primary); transform: translateY(-5px); background: #2d3748; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .card img { width: 100%; height: 75px; object-fit: contain; background: #fff; border-radius: 8px; margin-bottom: 8px; }
         .card p { margin: 0; font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        h2 { color: #38bdf8; font-size: 22px; margin-bottom: 10px; }
-        #loading { color: #4ade80; font-size: 14px; margin-bottom: 10px; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
-        /* Alert Message */
-        .alert { background: #facc15; color: #000; padding: 10px; border-radius: 8px; font-size: 13px; margin-bottom: 15px; display: none; }
+        /* Loading Spinner */
+        #loader { margin: 20px auto; border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        @media (max-width: 600px) { .grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; } h2 { font-size: 18px; } }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
     <div class="container">
-        <!-- Mixed Content Warning -->
-        <div id="mixed-warning" class="alert">
-            ভিডিও না চললে ব্রাউজারের উপরে (lock icon) থেকে <b>Insecure Content</b> Allow করুন অথবা <b>HTTP</b> দিয়ে সাইটটি ওপেন করুন।
+        <h2>Live: <span id="ch-name">Loading...</span></h2>
+        
+        <!-- Fix Message for GitHub Pages (HTTPS issue) -->
+        <div id="fix-box">
+            ⚠️ ভিডিও লোড না হলে নিচের বাটনে ক্লিক করে শিখুন কীভাবে ঠিক করবেন।
+            <br>
+            <button class="btn-fix" onclick="alert('নির্দেশনা:\n১. ব্রাউজারের উপরে সাইট নামের পাশে তালা (Lock) আইকনে ক্লিক করুন।\n২. Site Settings-এ যান।\n৩. Insecure Content খুঁজে বের করে Allow করে দিন।\n৪. পেজটি রিফ্রেশ দিন।')">How to Fix?</button>
         </div>
 
-        <h2>Live: <span id="ch-name">Loading...</span></h2>
-        <div id="loading">Connecting to Secure Server...</div>
-        
+        <div id="loader"></div>
+
         <div class="player-wrapper">
             <iframe id="main-player" src="about:blank" allowfullscreen></iframe>
         </div>
-        
+
         <div class="grid" id="list"></div>
     </div>
 
     <script>
-        // ১. কিবোর্ড সিকিউরিটি
+        // ১. কিবোর্ড সিকিউরিটি (F12, Ctrl+U বন্ধ)
         document.onkeydown = function(e) {
             if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)) return false;
         };
 
-        // ২. এনক্রিপ্টেড লিঙ্ক (Base64) - যাতে সরাসরি IP না দেখা যায়
-        // এই স্ট্রিংটি আসলে "http://103.144.89.251/player.php?stream="
-        const _0x4a2e = "aHR0cDovLzEwMy4xNDQuODkuMjUxL3BsYXllci5waHA/c3RyZWFtPQ==";
-        const JSON_URL = "https://raw.githubusercontent.com/mdabdullahsk/channels-list/main/channels.json";
+        // ২. এনক্রিপ্টেড সোর্স লিঙ্ক (Base64)
+        const _0x1a2b = "aHR0cDovLzEwMy4xNDQuODkuMjUxL3BsYXllci5waHA/c3RyZWFtPQ==";
+        const _0x3c4d = "https://raw.githubusercontent.com/mdabdullahsk/channels-list/main/channels.json";
 
-        // ৩. মিক্সড কন্টেন্ট চেক (HTTPS এ থাকলে সতর্ক করবে)
-        if (location.protocol === 'https:') {
-            document.getElementById('mixed-warning').style.display = 'block';
+        // ৩. HTTPS চেক করে ফিক্স মেসেজ দেখানো
+        if (window.location.protocol === "https:") {
+            document.getElementById('fix-box').style.display = 'block';
         }
 
-        async function fetchChannels() {
-            const listContainer = document.getElementById('list');
-            const nameText = document.getElementById('ch-name');
-            const loadingMsg = document.getElementById('loading');
-            const playerIframe = document.getElementById('main-player');
+        async function initApp() {
+            const listDiv = document.getElementById('list');
+            const nameEl = document.getElementById('ch-name');
+            const player = document.getElementById('main-player');
+            const loader = document.getElementById('loader');
 
             try {
-                const response = await fetch(JSON_URL);
-                const channels = await response.json();
-                loadingMsg.style.display = 'none';
+                const response = await fetch(_0x3c4d);
+                const data = await response.json();
+                loader.style.display = 'none';
 
-                channels.forEach((ch, index) => {
+                data.forEach((item, i) => {
                     const card = document.createElement('div');
                     card.className = 'card';
                     
-                    // ইমেজ প্রক্সি (যাতে লোগো লোড হয়)
-                    const logo = `https://images.weserv.nl/?url=${encodeURIComponent(ch.img)}&w=150&h=80`;
+                    // লোগো প্রক্সি (লোগো যেন সব জায়গায় লোড হয়)
+                    const imgUrl = `https://images.weserv.nl/?url=${encodeURIComponent(item.img)}&w=200`;
                     
-                    card.innerHTML = `<img src="${logo}" onerror="this.src='https://via.placeholder.com/150?text=No+Logo'"><p>${ch.name}</p>`;
+                    card.innerHTML = `<img src="${imgUrl}" onerror="this.src='https://via.placeholder.com/150?text=TV'"><p>${item.name}</p>`;
                     
                     card.onclick = () => {
                         document.querySelectorAll('.card').forEach(c => c.classList.remove('active-card'));
                         card.classList.add('active-card');
-                        nameText.innerText = ch.name;
+                        nameEl.innerText = item.name;
                         
-                        // লিঙ্ক ডিকোড করে সরাসরি প্লেয়ারে বসানো
-                        const target = atob(_0x4a2e) + ch.id;
-                        playerIframe.src = target;
-
+                        // ডিকোড করে লিঙ্ক সেট করা
+                        player.src = atob(_0x1a2b) + item.id;
+                        
+                        // মোবাইল ইউজারদের জন্য স্ক্রল টু প্লেয়ার
                         if(window.innerWidth < 800) window.scrollTo({top: 0, behavior: 'smooth'});
                     };
 
-                    listContainer.appendChild(card);
-                    if (index === 0) card.click(); 
+                    listDiv.appendChild(card);
+                    if (i === 0) card.click(); // প্রথম চ্যানেল প্লে
                 });
             } catch (err) {
-                loadingMsg.innerText = "Error: Could not load channels!";
-                loadingMsg.style.color = "#ff4444";
+                nameEl.innerText = "Error Loading Data!";
+                loader.style.display = 'none';
             }
         }
 
-        fetchChannels();
+        initApp();
     </script>
 </body>
 </html>
