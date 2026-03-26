@@ -1,0 +1,6 @@
+#EXTM3U
+#EXTINF:-1 tvg-logo="https://en.wikipedia.org/wiki/File:Bangladesh_Television_Logo.svg#/media/File:Bangladesh_Television_Logo.svg", BTV HD
+https://owrcovcrpy.gpcdn.net/bpk-tv/1709/output/index.m3u8
+
+#EXTINF:-1 tvg-logo="https://en.wikipedia.org/wiki/File:Ekushey_Television_Logo.svg#/media/File:Ekushey_Television_Logo.svg", Ekushey TV
+https://bozztv.com/rongo/rongo-EkusheyTV/tracks-v1a1/mono.m3u8
